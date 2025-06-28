@@ -153,20 +153,20 @@ const OrderManagement = () => {
 
   if (!isAuthenticated || user?.role !== 'ADMIN') {
     return (
-      <div className="min-h-screen gradient-bg py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen gradient-bg py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center">
-            <div className="mb-8">
-              <svg className="h-24 w-24 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="mb-6 sm:mb-8">
+              <svg className="h-16 w-16 sm:h-24 sm:w-24 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
             </div>
-            <h1 className="text-4xl font-bold text-gray-800 mb-4">Acceso Denegado</h1>
-            <p className="text-lg text-gray-600 mb-8">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-4">Acceso Denegado</h1>
+            <p className="text-sm sm:text-base lg:text-lg text-gray-600 mb-6 sm:mb-8">
               No tienes permisos para acceder a esta página
             </p>
-            <div className="bg-red-50 border border-red-200 rounded-xl p-6 max-w-md mx-auto">
-              <p className="text-red-700">Solo los administradores pueden gestionar órdenes</p>
+            <div className="bg-red-50 border border-red-200 rounded-xl p-4 sm:p-6 max-w-md mx-auto">
+              <p className="text-red-700 text-sm sm:text-base">Solo los administradores pueden gestionar órdenes</p>
             </div>
           </div>
         </div>
@@ -176,10 +176,10 @@ const OrderManagement = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen gradient-bg py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen gradient-bg py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          <div className="flex justify-center items-center h-48 sm:h-64">
+            <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-blue-600"></div>
           </div>
         </div>
       </div>
@@ -188,14 +188,14 @@ const OrderManagement = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen gradient-bg py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen gradient-bg py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-red-700 max-w-2xl mx-auto">
-            <div className="flex items-center space-x-3">
-              <svg className="h-6 w-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-red-50 border border-red-200 rounded-xl p-3 sm:p-6 text-red-700 max-w-2xl mx-auto">
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <svg className="h-4 w-4 sm:h-6 sm:w-6 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span className="font-semibold">Error: {error}</span>
+              <span className="font-semibold text-sm sm:text-base">Error: {error}</span>
             </div>
           </div>
         </div>
@@ -204,55 +204,55 @@ const OrderManagement = () => {
   }
 
   return (
-    <div className="min-h-screen gradient-bg py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen gradient-bg py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="mb-6">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mb-4 shadow-lg">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="text-center mb-8 sm:mb-12">
+          <div className="mb-4 sm:mb-6">
+            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mb-4 shadow-lg">
+              <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
             </div>
           </div>
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">Gestión de Órdenes</h1>
-          <p className="text-lg text-gray-600">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-4">Gestión de Órdenes</h1>
+          <p className="text-sm sm:text-base lg:text-lg text-gray-600">
             Administra y actualiza el estado de las órdenes de los clientes
           </p>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {orders.map((order) => (
-            <div key={order.id} className="card p-6 hover:shadow-xl transition-all duration-300">
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
+            <div key={order.id} className="card p-4 sm:p-6 hover:shadow-xl transition-all duration-300">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 sm:mb-6">
                 <div className="flex-1">
-                  <div className="flex items-center space-x-4 mb-4">
-                    <h3 className="text-2xl font-bold text-gradient">Orden #{order.id}</h3>
-                    <span className={`px-4 py-2 text-sm font-semibold rounded-full border ${getStatusColor(order.status)}`}>
+                  <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mb-3 sm:mb-4">
+                    <h3 className="text-xl sm:text-2xl font-bold text-gradient">Orden #{order.id}</h3>
+                    <span className={`px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-semibold rounded-full border ${getStatusColor(order.status)}`}>
                       {getStatusText(order.status)}
                     </span>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-600">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-xs sm:text-sm text-gray-600">
                     <div className="flex items-center space-x-2">
-                      <svg className="h-4 w-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
                       <span><strong>Cliente:</strong> {order.user?.name || 'N/A'}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <svg className="h-4 w-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                       </svg>
                       <span><strong>Total:</strong> ${order.total?.toLocaleString('es-AR') || '0'}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <svg className="h-4 w-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="h-3 w-3 sm:h-4 sm:w-4 text-purple-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a4 4 0 118 0v4m-4 6v6m-4-6h8m-8 6h8" />
                       </svg>
                       <span><strong>Items:</strong> {order.items?.length || 0}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <svg className="h-4 w-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="h-3 w-3 sm:h-4 sm:w-4 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       <span><strong>Creada:</strong> {formatDate(order.createdAt)}</span>
@@ -262,26 +262,26 @@ const OrderManagement = () => {
               </div>
 
               {/* Items de la orden */}
-              <div className="mb-6">
-                <h4 className="text-lg font-semibold text-gray-800 mb-4">Productos</h4>
-                <div className="space-y-3">
+              <div className="mb-4 sm:mb-6">
+                <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4">Productos</h4>
+                <div className="space-y-2 sm:space-y-3">
                   {order.items?.map((item, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
-                      <div className="flex items-center space-x-4">
+                    <div key={index} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 bg-gray-50 rounded-xl border border-gray-100 space-y-2 sm:space-y-0">
+                      <div className="flex items-center space-x-3 sm:space-x-4">
                         <img 
                           src={item.product?.image || '/images/bariloche.jpg'} 
                           alt={item.product?.name || 'Producto'} 
-                          className="w-16 h-16 object-cover rounded-lg"
+                          className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-lg flex-shrink-0"
                           onError={handleImageError}
                         />
-                        <div>
-                          <p className="font-semibold text-gray-800">{item.product?.name || 'Producto desconocido'}</p>
-                          <p className="text-sm text-gray-600">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-gray-800 text-sm sm:text-base truncate">{item.product?.name || 'Producto desconocido'}</p>
+                          <p className="text-xs sm:text-sm text-gray-600">
                             {item.quantity} x ${item.price?.toLocaleString('es-AR') || '0'}
                           </p>
                         </div>
                       </div>
-                      <p className="font-semibold text-gray-900">
+                      <p className="font-semibold text-gray-900 text-sm sm:text-base">
                         ${((item.quantity || 0) * (item.price || 0)).toLocaleString('es-AR')}
                       </p>
                     </div>
@@ -290,13 +290,13 @@ const OrderManagement = () => {
               </div>
 
               {/* Controles de administración */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
-                <div className="flex items-center space-x-3">
-                  <label className="text-sm font-medium text-gray-700">Cambiar estado:</label>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0 sm:space-x-4 pt-4 sm:pt-6 border-t border-gray-200">
+                <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
+                  <label className="text-xs sm:text-sm font-medium text-gray-700">Cambiar estado:</label>
                   <select
                     value={order.status}
                     onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                    className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="border border-gray-300 rounded-lg px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value={0}>Pendiente</option>
                     <option value={1}>Procesando</option>
@@ -305,12 +305,12 @@ const OrderManagement = () => {
                   </select>
                 </div>
                 
-                <div className="flex space-x-3">
+                <div className="flex space-x-2 sm:space-x-3">
                   {canCancelOrder(order) && (
                     <button
                       onClick={() => handleCancelOrder(order.id)}
                       disabled={cancellingOrder === order.id}
-                      className="btn-danger disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="btn-danger disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3"
                     >
                       {cancellingOrder === order.id ? 'Cancelando...' : 'Cancelar Orden'}
                     </button>
@@ -321,13 +321,13 @@ const OrderManagement = () => {
           ))}
 
           {orders.length === 0 && (
-            <div className="text-center py-16">
-              <div className="mb-8">
-                <svg className="h-24 w-24 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="text-center py-12 sm:py-16">
+              <div className="mb-6 sm:mb-8">
+                <svg className="h-16 w-16 sm:h-24 sm:w-24 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
-                <p className="text-gray-600 text-lg">No hay órdenes para gestionar</p>
-                <p className="text-gray-500 text-sm mt-2">Las órdenes aparecerán aquí cuando los clientes realicen compras</p>
+                <p className="text-gray-600 text-base sm:text-lg">No hay órdenes para gestionar</p>
+                <p className="text-gray-500 text-xs sm:text-sm mt-2">Las órdenes aparecerán aquí cuando los clientes realicen compras</p>
               </div>
             </div>
           )}
