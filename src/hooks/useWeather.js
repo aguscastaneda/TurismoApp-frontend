@@ -7,8 +7,8 @@ const useWeather = (location) => {
 
   // Mapeo de ciudades con caracteres especiales a nombres que la API puede reconocer
   const cityNameMapping = {
-    'Iguazú': 'Iguazu',
-    'Iguazu': 'Iguazu',
+    'Iguazú': 'Puerto Iguazu',
+    'Iguazu': 'Puerto Iguazu',
     'Buenos Aires': 'Buenos Aires',
     'Bariloche': 'San Carlos de Bariloche',
     'Mendoza': 'Mendoza',
