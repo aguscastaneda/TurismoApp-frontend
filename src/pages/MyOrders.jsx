@@ -46,7 +46,7 @@ const MyOrders = () => {
     setCancellingOrder(orderId);
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await axios.post(`${apiUrl}/api/orders/${orderId}/cancel`, {}, {
+      const response = await axios.put(`${apiUrl}/api/orders/${orderId}/cancel`, {}, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
