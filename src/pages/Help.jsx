@@ -60,8 +60,10 @@ const Help = () => {
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">{helpData?.titulo}</h1>
-          <p className="text-white/80 text-sm sm:text-base lg:text-lg">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-blue mb-4">
+            {helpData?.titulo || 'Guía de Ayuda'}
+          </h1>
+          <p className="text-blue/90 text-sm sm:text-base lg:text-lg font-medium">
             Encuentra respuestas a tus preguntas y soluciones a problemas comunes
           </p>
         </div>
@@ -69,13 +71,13 @@ const Help = () => {
         {/* Navigation */}
         <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 mb-6 sm:mb-8">
           <div className="flex flex-wrap gap-2">
-            {helpData?.secciones.map((seccion, index) => (
+            {helpData?.secciones?.map((seccion, index) => (
               <button
                 key={index}
                 onClick={() => setActiveSection(index)}
                 className={`px-3 sm:px-4 py-2 rounded-md font-medium transition-colors duration-200 text-sm sm:text-base ${
                   activeSection === index
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-blue-600 text-white shadow-md'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -87,14 +89,14 @@ const Help = () => {
 
         {/* Content */}
         <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 lg:p-8">
-          {helpData?.secciones[activeSection] && (
+          {helpData?.secciones?.[activeSection] && (
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
                 {helpData.secciones[activeSection].titulo}
               </h2>
               
               <div className="space-y-4 sm:space-y-6">
-                {helpData.secciones[activeSection].items.map((item, index) => (
+                {helpData.secciones[activeSection].items?.map((item, index) => (
                   <div key={index} className="border-l-4 border-blue-500 pl-4 sm:pl-6">
                     {item.problema ? (
                       // Problema y solución
@@ -102,7 +104,7 @@ const Help = () => {
                         <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
                           {item.problema}
                         </h3>
-                        <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                        <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
                           {item.solucion}
                         </p>
                       </div>
@@ -112,7 +114,7 @@ const Help = () => {
                         <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
                           {item.titulo}
                         </h3>
-                        <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                        <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
                           {item.descripcion}
                         </p>
                       </div>
@@ -135,7 +137,7 @@ const Help = () => {
                 </svg>
                 <h3 className="text-base sm:text-lg font-semibold text-gray-900">Contacto por Email</h3>
               </div>
-              <p className="text-sm sm:text-base text-gray-600 mb-2">
+              <p className="text-sm sm:text-base text-gray-700 mb-2">
                 Envía un email detallando tu problema y te responderemos lo antes posible.
               </p>
               <a
@@ -153,7 +155,7 @@ const Help = () => {
                 </svg>
                 <h3 className="text-base sm:text-lg font-semibold text-gray-900">Horarios de Atención</h3>
               </div>
-              <p className="text-sm sm:text-base text-gray-600 mb-2">
+              <p className="text-sm sm:text-base text-gray-700 mb-2">
                 Nuestro equipo de soporte está disponible en los siguientes horarios:
               </p>
               <p className="text-gray-800 font-medium text-sm sm:text-base">
