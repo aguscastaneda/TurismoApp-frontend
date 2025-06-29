@@ -46,12 +46,25 @@ const MyOrders = () => {
     setCancellingOrder(orderId);
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const token = localStorage.getItem('token');
+      
+      // Verificar que el token existe
+      if (!token) {
+        throw new Error('No hay token de autenticación. Por favor, inicia sesión nuevamente.');
+      }
+
+      console.log('Cancelando orden:', orderId);
+      console.log('Token:', token.substring(0, 20) + '...');
+
       const response = await axios.put(`${apiUrl}/api/orders/${orderId}/cancel`, {}, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       });
      
+      console.log('Orden cancelada exitosamente:', response.data);
+      
       setOrders(orders.map(order =>
         order.id === orderId
           ? { ...order, status: 3, OrderStatus: { ...order.OrderStatus, name: 'CANCELLED' } }
@@ -59,8 +72,21 @@ const MyOrders = () => {
       ));
       alert(response.data.message || 'Orden cancelada correctamente');
     } catch (err) {
-      console.error('Error cancelling order:', err);
-      alert(err.response?.data?.error || 'Error al cancelar la orden');
+      console.error('Error al cancelar orden:', {
+        message: err.message,
+        status: err.response?.status,
+        data: err.response?.data
+      });
+      
+      if (err.response?.status === 401) {
+        alert('Error de autenticación. Por favor, inicia sesión nuevamente.');
+      } else if (err.response?.status === 404) {
+        alert('La orden no fue encontrada o ya no existe.');
+      } else if (err.response?.status === 403) {
+        alert('No tienes permisos para cancelar esta orden.');
+      } else {
+        alert(err.response?.data?.error || err.message || 'Error al cancelar la orden');
+      }
     } finally {
       setCancellingOrder(null);
     }
