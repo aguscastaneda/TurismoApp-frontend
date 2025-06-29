@@ -4,6 +4,16 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  safelist: [
+    'hidden', 'block', 'flex', 'grid', 'inline-block', 'inline-flex',
+    'sm:hidden', 'md:hidden', 'lg:hidden', 'xl:hidden',
+    'sm:block', 'md:block', 'lg:block', 'xl:block',
+    'sm:flex', 'md:flex', 'lg:flex', 'xl:flex',
+    'flex-row', 'flex-col',
+    'grid-cols-1', 'grid-cols-2', 'grid-cols-3', 'grid-cols-4',
+    'items-center', 'justify-center',
+    'text-center', 'text-left', 'text-right',
+  ],
   darkMode: ["class"],
   theme: {
     extend: {
