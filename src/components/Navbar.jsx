@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import CurrencySelector from "./CurrencySelector";
 import logo from "../assets/logo.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Navbar = () => {
   const { isAuthenticated, user, logout } = useAuth();
@@ -16,6 +16,23 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Cerrar menú al hacer clic en un enlace
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
+  // Cerrar menú al cambiar el tamaño de la ventana
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <nav className="fixed top-0 w-full z-50 shadow-lg border-b border-slate-200" style={{ backgroundColor: '#03045E' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -24,6 +41,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link
               to="/"
+              onClick={closeMenu}
               className="flex items-center space-x-2 text-lg sm:text-xl lg:text-2xl font-bold text-white hover:text-blue-300 transition-colors duration-200"
             >
               <img src={logo} alt="Logo" className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 transition-transform duration-200 hover:scale-110" />
@@ -145,7 +163,7 @@ const Navbar = () => {
           <div className="lg:hidden flex items-center space-x-2">
             <CurrencySelector />
             {isAuthenticated && (
-              <Link to="/cart" className="relative">
+              <Link to="/cart" onClick={closeMenu} className="relative">
                 <button className="flex items-center space-x-1 border border-slate-200 text-white border-white hover:bg-[#CAF0F8] hover:border-[#CAF0F8] hover:text-[#03045E] transition-all duration-200 p-2 rounded-md">
                   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -158,69 +176,147 @@ const Navbar = () => {
                 </button>
               </Link>
             )}
+            
+            {/* Hamburger Menu Button */}
             <button
               onClick={toggleMenu}
-              className="flex items-center space-x-1 border border-slate-200 text-white border-white hover:bg-[#CAF0F8] hover:border-[#CAF0F8] hover:text-[#03045E] transition-all duration-200 p-2 rounded-md"
+              className="flex flex-col justify-center items-center w-8 h-8 border border-slate-200 text-white border-white hover:bg-[#CAF0F8] hover:border-[#CAF0F8] hover:text-[#03045E] transition-all duration-200 rounded-md"
+              aria-label="Toggle menu"
             >
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+              <span className={`block w-5 h-0.5 bg-current transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-1.5' : '-translate-y-1'}`}></span>
+              <span className={`block w-5 h-0.5 bg-current transition-all duration-300 ${isMenuOpen ? 'opacity-0' : 'opacity-100'}`}></span>
+              <span className={`block w-5 h-0.5 bg-current transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-1.5' : 'translate-y-1'}`}></span>
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Overlay */}
         {isMenuOpen && (
-          <div className="lg:hidden bg-white border-t border-slate-200 shadow-lg">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              {!isAuthenticated ? (
-                <>
-                  <Link to="/help" className="block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 rounded-md">
-                    Ayuda
-                  </Link>
-                  <div className="border-t border-slate-200 pt-2 mt-2">
-                    <Link to="/login" className="block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 rounded-md">
-                      Ingresa
-                    </Link>
-                    <Link to="/register" className="block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 rounded-md">
-                      Registrate
-                    </Link>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <Link to="/my-orders" className="block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 rounded-md">
-                    Mis Órdenes
-                  </Link>
-                  <Link to="/help" className="block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 rounded-md">
-                    Ayuda
-                  </Link>
-                  {user?.role === "ADMIN" && (
-                    <>
-                      <Link to="/admin/products" className="block px-3 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-50 rounded-md">
-                        Productos
-                      </Link>
-                      <Link to="/admin/orders" className="block px-3 py-2 text-sm font-medium text-orange-700 hover:bg-orange-50 rounded-md">
-                        Órdenes
-                      </Link>
-                    </>
-                  )}
-                  <div className="border-t border-slate-200 pt-2 mt-2">
-                    <div className="px-3 py-2 text-sm text-slate-500">
-                      {user?.name} {user?.role === "ADMIN" && "(Admin)"} {user?.role === "SALES_MANAGER" && "(Manager)"}
-                    </div>
-                    <button
-                      onClick={logout}
-                      className="block w-full text-left px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 rounded-md"
-                    >
-                      Cerrar Sesión
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
+          <div className="lg:hidden fixed inset-0 z-40 bg-black bg-opacity-50" onClick={closeMenu}></div>
         )}
+
+        {/* Mobile Menu */}
+        <div className={`lg:hidden fixed top-16 left-0 right-0 bg-white border-t border-slate-200 shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'}`}>
+          <div className="px-4 py-6 space-y-4 max-h-[calc(100vh-4rem)] overflow-y-auto">
+            {!isAuthenticated ? (
+              <>
+                {/* Moneda selector en móvil */}
+                <div className="border-b border-slate-200 pb-4">
+                  <h3 className="text-sm font-medium text-slate-500 mb-2">Moneda</h3>
+                  <CurrencySelector />
+                </div>
+                
+                <Link 
+                  to="/help" 
+                  onClick={closeMenu}
+                  className="flex items-center space-x-3 px-3 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg transition-colors duration-200"
+                >
+                  <svg className="h-5 w-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>Ayuda</span>
+                </Link>
+                
+                <div className="border-t border-slate-200 pt-4 space-y-2">
+                  <Link 
+                    to="/login" 
+                    onClick={closeMenu}
+                    className="flex items-center justify-center w-full px-4 py-3 text-base font-medium text-white bg-[#03045E] hover:bg-[#023E8A] rounded-lg transition-colors duration-200"
+                  >
+                    Ingresa
+                  </Link>
+                  <Link 
+                    to="/register" 
+                    onClick={closeMenu}
+                    className="flex items-center justify-center w-full px-4 py-3 text-base font-medium text-[#03045E] border-2 border-[#03045E] hover:bg-[#03045E] hover:text-white rounded-lg transition-colors duration-200"
+                  >
+                    Registrate
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Moneda selector en móvil */}
+                <div className="border-b border-slate-200 pb-4">
+                  <h3 className="text-sm font-medium text-slate-500 mb-2">Moneda</h3>
+                  <CurrencySelector />
+                </div>
+
+                <Link 
+                  to="/my-orders" 
+                  onClick={closeMenu}
+                  className="flex items-center space-x-3 px-3 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg transition-colors duration-200"
+                >
+                  <svg className="h-5 w-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                  <span>Mis Órdenes</span>
+                </Link>
+
+                <Link 
+                  to="/help" 
+                  onClick={closeMenu}
+                  className="flex items-center space-x-3 px-3 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg transition-colors duration-200"
+                >
+                  <svg className="h-5 w-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>Ayuda</span>
+                </Link>
+
+                {user?.role === "ADMIN" && (
+                  <div className="border-t border-slate-200 pt-4 space-y-2">
+                    <h3 className="text-sm font-medium text-slate-500 px-3">Administración</h3>
+                    <Link 
+                      to="/admin/products" 
+                      onClick={closeMenu}
+                      className="flex items-center space-x-3 px-3 py-3 text-base font-medium text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors duration-200"
+                    >
+                      <svg className="h-5 w-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      <span>Gestionar Productos</span>
+                    </Link>
+                    <Link 
+                      to="/admin/orders" 
+                      onClick={closeMenu}
+                      className="flex items-center space-x-3 px-3 py-3 text-base font-medium text-orange-700 hover:bg-orange-50 rounded-lg transition-colors duration-200"
+                    >
+                      <svg className="h-5 w-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                      <span>Gestionar Órdenes</span>
+                    </Link>
+                  </div>
+                )}
+
+                <div className="border-t border-slate-200 pt-4 space-y-2">
+                  <div className="px-3 py-2 text-sm text-slate-500">
+                    <div className="font-medium">{user?.name}</div>
+                    <div className="text-xs">
+                      {user?.role === "ADMIN" && "Administrador"}
+                      {user?.role === "SALES_MANAGER" && "Gerente de Ventas"}
+                      {user?.role === "USER" && "Usuario"}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      logout();
+                      closeMenu();
+                    }}
+                    className="flex items-center space-x-3 w-full px-3 py-3 text-base font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
+                  >
+                    <svg className="h-5 w-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span>Cerrar Sesión</span>
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </nav>
   );
