@@ -2,12 +2,47 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { handleImageError } from '../utils/imageUtils';
 
+const TABS = ['all', 'pending', 'processing', 'completed', 'cancelled'];
+
+const getStatusFromNumber = (statusNumber) => {
+  const statusMap = {
+    0: 'pending',
+    1: 'processing',
+    2: 'completed',
+    3: 'cancelled'
+  };
+  return statusMap[statusNumber] || 'unknown';
+};
+
+const getStatusText = (status) => {
+  const statusTexts = {
+    pending: 'Pendiente',
+    processing: 'Procesando',
+    completed: 'Completada',
+    cancelled: 'Cancelada',
+    unknown: 'Desconocido'
+  };
+  return statusTexts[status] || 'Desconocido';
+};
+
+const getStatusColor = (status) => {
+  const colors = {
+    pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+    processing: 'bg-blue-100 text-blue-800 border-blue-200',
+    completed: 'bg-green-100 text-green-800 border-green-200',
+    cancelled: 'bg-red-100 text-red-800 border-red-200',
+    unknown: 'bg-slate-100 text-slate-800 border-slate-200'
+  };
+  return colors[status] || colors.unknown;
+};
+
 const OrderManagement = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [cancellingOrder, setCancellingOrder] = useState(null);
   const { isAuthenticated, user } = useAuth();
+  const [activeTab, setActiveTab] = useState('all');
 
   // Estados que permiten cancelación (según la lógica del backend)
   const CANCELABLE_STATUSES = [0, 1]; // PENDING, PROCESSING
@@ -119,28 +154,6 @@ const OrderManagement = () => {
     return CANCELABLE_STATUSES.includes(order.status);
   };
 
-  const getStatusColor = (status) => {
-    const statusNumber = typeof status === 'string' ? parseInt(status) : status;
-    const colors = {
-      0: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-      1: 'bg-blue-100 text-blue-800 border-blue-200',
-      2: 'bg-green-100 text-green-800 border-green-200',
-      3: 'bg-red-100 text-red-800 border-red-200'
-    };
-    return colors[statusNumber] || 'bg-slate-100 text-slate-800 border-slate-200';
-  };
-
-  const getStatusText = (status) => {
-    const statusNumber = typeof status === 'string' ? parseInt(status) : status;
-    const statusTexts = {
-      0: 'PENDIENTE',
-      1: 'PROCESANDO',
-      2: 'COMPLETADA',
-      3: 'CANCELADA'
-    };
-    return statusTexts[statusNumber] || 'DESCONOCIDO';
-  };
-
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('es-ES', {
       year: 'numeric',
@@ -149,6 +162,30 @@ const OrderManagement = () => {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  // Función para contar órdenes por estado
+  const getOrderCounts = () => {
+    const counts = {
+      all: orders.length,
+      pending: 0,
+      processing: 0,
+      completed: 0,
+      cancelled: 0
+    };
+    orders.forEach(order => {
+      const status = getStatusFromNumber(order.status);
+      if (counts.hasOwnProperty(status)) {
+        counts[status]++;
+      }
+    });
+    return counts;
+  };
+
+  // Filtrar órdenes según el tab activo
+  const getFilteredOrders = () => {
+    if (activeTab === 'all') return orders;
+    return orders.filter(order => getStatusFromNumber(order.status) === activeTab);
   };
 
   if (!isAuthenticated || user?.role !== 'ADMIN') {
@@ -220,15 +257,35 @@ const OrderManagement = () => {
           </p>
         </div>
 
+        {/* Tabs de estado */}
+        <div className="mb-6 sm:mb-8 flex justify-center">
+          <div className="card p-2 flex flex-wrap justify-center gap-1 sm:gap-2">
+            {TABS.map(tab => {
+              const counts = getOrderCounts();
+              const count = counts[tab] || 0;
+              return (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition-all duration-200 ${activeTab === tab ? getStatusColor(tab) : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800'}`}
+                >
+                  <span>{tab === 'all' ? 'Todas' : getStatusText(tab)}</span>
+                  <span className="ml-1 sm:ml-2 px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs font-bold bg-white/80 rounded-full border border-current/20">{count}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         <div className="space-y-4 sm:space-y-6">
-          {orders.map((order) => (
+          {getFilteredOrders().map((order) => (
             <div key={order.id} className="card p-4 sm:p-6 hover:shadow-xl transition-all duration-300">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 sm:mb-6">
                 <div className="flex-1">
                   <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mb-3 sm:mb-4">
                     <h3 className="text-xl sm:text-2xl font-bold text-gradient">Orden #{order.id}</h3>
-                    <span className={`px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-semibold rounded-full border ${getStatusColor(order.status)}`}>
-                      {getStatusText(order.status)}
+                    <span className={`px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-semibold rounded-full border ${getStatusColor(getStatusFromNumber(order.status))}`}>
+                      {getStatusText(getStatusFromNumber(order.status))}
                     </span>
                   </div>
                   
@@ -320,14 +377,13 @@ const OrderManagement = () => {
             </div>
           ))}
 
-          {orders.length === 0 && (
+          {getFilteredOrders().length === 0 && (
             <div className="text-center py-12 sm:py-16">
               <div className="mb-6 sm:mb-8">
                 <svg className="h-16 w-16 sm:h-24 sm:w-24 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
-                <p className="text-gray-600 text-base sm:text-lg">No hay órdenes para gestionar</p>
-                <p className="text-gray-500 text-xs sm:text-sm mt-2">Las órdenes aparecerán aquí cuando los clientes realicen compras</p>
+                <p className="text-gray-600 text-base sm:text-lg">No hay órdenes {activeTab === 'all' ? '' : getStatusText(activeTab)} aún</p>
               </div>
             </div>
           )}
