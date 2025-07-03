@@ -9,7 +9,7 @@ const ProductCard = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
   const { addToCart, getProductMessage, clearProductMessage } = useCart();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const { convertPrice, formatPrice } = useCurrency();
   const navigate = useNavigate();
 
@@ -37,6 +37,10 @@ const ProductCard = ({ product }) => {
     if (e.target.closest('button')) return;
     if (!isAuthenticated) {
       navigate('/login');
+      return;
+    }
+    if (user?.role === 'ADMIN') {
+      // Si es admin, no hace nada
       return;
     }
     navigate(`/schedule-trip/${product.id}`, { state: { product } });
