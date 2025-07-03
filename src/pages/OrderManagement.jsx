@@ -57,6 +57,9 @@ const OrderManagement = () => {
     cancelled: '#EF4444', // rojo
   };
 
+  // Definir los estados para los gráficos
+  const estados = ['pending', 'processing', 'completed', 'cancelled'];
+
   // Datos para el PieChart
   const pieData = [
     { name: 'Pendiente', value: orders.filter(o => getStatusFromNumber(o.status) === 'pending').length, color: STATUS_COLORS.pending },
@@ -80,7 +83,6 @@ const OrderManagement = () => {
     return d.toISOString().slice(0,10);
   });
   // Construir datos para el gráfico de líneas por día
-  const estados = ['pending', 'processing', 'completed', 'cancelled'];
   const lineData = days.map(day => {
     const data = { day };
     estados.forEach(status => {
@@ -287,6 +289,19 @@ const OrderManagement = () => {
   return (
     <div className="min-h-screen gradient-bg py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-8 sm:mb-12">
+          <div className="mb-4 sm:mb-6">
+            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mb-4 shadow-lg">
+              <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
+          </div>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-4">Gestión de Órdenes</h1>
+          <p className="text-sm sm:text-base lg:text-lg text-gray-600 mb-8">
+            Administra y actualiza el estado de las órdenes de los clientes
+          </p>
+        </div>
         {/* Gráficos de resumen */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {/* PieChart a la izquierda */}
@@ -325,20 +340,6 @@ const OrderManagement = () => {
             </LineResponsiveContainer>
           </div>
         </div>
-        <div className="text-center mb-8 sm:mb-12">
-          <div className="mb-4 sm:mb-6">
-            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mb-4 shadow-lg">
-              <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
-            </div>
-          </div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-4">Gestión de Órdenes</h1>
-          <p className="text-sm sm:text-base lg:text-lg text-gray-600">
-            Administra y actualiza el estado de las órdenes de los clientes
-          </p>
-        </div>
-
         {/* Tabs de estado */}
         <div className="mb-6 sm:mb-8 flex justify-center">
           <div className="card p-2 flex flex-wrap justify-center gap-1 sm:gap-2">
