@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { handleImageError } from '../utils/imageUtils';
+import { PieChart, Pie, Cell, Tooltip as PieTooltip, Legend as PieLegend, ResponsiveContainer as PieResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as LineTooltip, Legend as LineLegend, ResponsiveContainer as LineResponsiveContainer } from 'recharts';
 
 const TABS = ['all', 'pending', 'processing', 'completed', 'cancelled'];
 
@@ -46,6 +48,48 @@ const OrderManagement = () => {
 
   // Estados que permiten cancelación (según la lógica del backend)
   const CANCELABLE_STATUSES = [0, 1]; // PENDING, PROCESSING
+
+  // Colores para los estados en los gráficos
+  const STATUS_COLORS = {
+    pending: '#FACC15', // amarillo
+    processing: '#3B82F6', // azul
+    completed: '#22C55E', // verde
+    cancelled: '#EF4444', // rojo
+  };
+
+  // Datos para el PieChart
+  const pieData = [
+    { name: 'Pendiente', value: orders.filter(o => getStatusFromNumber(o.status) === 'pending').length, color: STATUS_COLORS.pending },
+    { name: 'Procesando', value: orders.filter(o => getStatusFromNumber(o.status) === 'processing').length, color: STATUS_COLORS.processing },
+    { name: 'Completada', value: orders.filter(o => getStatusFromNumber(o.status) === 'completed').length, color: STATUS_COLORS.completed },
+    { name: 'Cancelada', value: orders.filter(o => getStatusFromNumber(o.status) === 'cancelled').length, color: STATUS_COLORS.cancelled },
+  ];
+
+  // Agrupar órdenes por día para el LineChart (últimos 7 días)
+  function getDay(date) {
+    const d = new Date(date);
+    d.setHours(0,0,0,0);
+    return d.toISOString().slice(0,10);
+  }
+  // Generar los últimos 7 días (rolling window)
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const days = Array.from({length: 7}, (_, i) => {
+    const d = new Date(today);
+    d.setDate(today.getDate() - 6 + i);
+    return d.toISOString().slice(0,10);
+  });
+  // Construir datos para el gráfico de líneas por día
+  const estados = ['pending', 'processing', 'completed', 'cancelled'];
+  const lineData = days.map(day => {
+    const data = { day };
+    estados.forEach(status => {
+      data[status] = orders.filter(o => getDay(o.createdAt) === day && getStatusFromNumber(o.status) === status).length;
+    });
+    data['all'] = orders.filter(o => getDay(o.createdAt) === day).length;
+    return data;
+  });
+  const [lineStatus, setLineStatus] = useState('all');
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -243,6 +287,44 @@ const OrderManagement = () => {
   return (
     <div className="min-h-screen gradient-bg py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
+        {/* Gráficos de resumen */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          {/* PieChart a la izquierda */}
+          <div className="bg-white rounded-xl shadow p-4 flex flex-col items-center">
+            <h2 className="text-lg font-bold mb-2 text-gray-700">Órdenes por Estado</h2>
+            <PieResponsiveContainer width="100%" height={250}>
+              <PieChart>
+                <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
+                  {pieData.map((entry, idx) => (
+                    <Cell key={`cell-${idx}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <PieTooltip />
+                <PieLegend />
+              </PieChart>
+            </PieResponsiveContainer>
+          </div>
+          {/* LineChart a la derecha */}
+          <div className="bg-white rounded-xl shadow p-4 flex flex-col items-center">
+            <h2 className="text-lg font-bold mb-2 text-gray-700">Órdenes por Día (últimos 7 días)</h2>
+            <div className="mb-2 flex flex-wrap gap-2 justify-center">
+              <button onClick={() => setLineStatus('all')} className={`px-2 py-1 rounded ${lineStatus==='all' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700'}`}>Todos</button>
+              {estados.map(status => (
+                <button key={status} onClick={() => setLineStatus(status)} className={`px-2 py-1 rounded ${lineStatus===status ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700'}`}>{getStatusText(status)}</button>
+              ))}
+            </div>
+            <LineResponsiveContainer width="100%" height={250}>
+              <LineChart data={lineData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="day" tickFormatter={d => d.slice(5).replace('-', '/')} />
+                <YAxis allowDecimals={false} domain={[0, 'dataMax + 1']} interval={0} tickCount={6} tick={{fontSize: 12}} tickFormatter={v => (v % 5 === 0 ? v : '')} />
+                <LineTooltip />
+                <LineLegend />
+                <Line type="monotone" dataKey={lineStatus} stroke={lineStatus==='all' ? '#6366F1' : STATUS_COLORS[lineStatus]} strokeWidth={3} dot />
+              </LineChart>
+            </LineResponsiveContainer>
+          </div>
+        </div>
         <div className="text-center mb-8 sm:mb-12">
           <div className="mb-4 sm:mb-6">
             <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mb-4 shadow-lg">
