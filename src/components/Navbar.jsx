@@ -51,7 +51,8 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <div className="hidden lg:flex items-center space-x-3">
-            <CurrencySelector />
+            {/* Mostrar CurrencySelector solo si no es admin */}
+            {isAuthenticated && user?.role !== "ADMIN" && <CurrencySelector />}
             {!isAuthenticated ? (
               <>
                 <Link to="/help">
@@ -77,38 +78,34 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Link to="/cart" className="relative group">
-                  <button className="flex items-center space-x-2 border border-slate-200 text-white border-white hover:bg-[#CAF0F8] hover:border-[#CAF0F8] hover:text-[#03045E] transition-all duration-200 px-3 py-2 rounded-md text-sm font-medium">
-                    <svg className="h-5 w-5 text-white group-hover:text-[#03045E] transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                    </svg>
-                    <span>Carrito</span>
-                    {cartItemsCount > 0 && (
-                      <span className="ml-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-pink-500 group-hover:bg-pink-600 text-white rounded-full">
-                        {cartItemsCount}
-                      </span>
-                    )}
-                  </button>
-                </Link>
+                {/* Mostrar Carrito y Mis Órdenes solo si no es admin */}
+                {user?.role !== "ADMIN" && (
+                  <>
+                    <Link to="/cart" className="relative group">
+                      <button className="flex items-center space-x-2 border border-slate-200 text-white border-white hover:bg-[#CAF0F8] hover:border-[#CAF0F8] hover:text-[#03045E] transition-all duration-200 px-3 py-2 rounded-md text-sm font-medium">
+                        <svg className="h-5 w-5 text-white group-hover:text-[#03045E] transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                        </svg>
+                        <span>Carrito</span>
+                        {cartItemsCount > 0 && (
+                          <span className="ml-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-pink-500 group-hover:bg-pink-600 text-white rounded-full">
+                            {cartItemsCount}
+                          </span>
+                        )}
+                      </button>
+                    </Link>
 
-                <Link to="/my-orders">
-                  <button className="flex items-center space-x-2 border border-slate-200 text-white border-white hover:bg-[#CAF0F8] hover:border-[#CAF0F8] hover:text-[#03045E] transition-all duration-200 px-3 py-2 rounded-md text-sm font-medium">
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                    </svg>
-                    <span>Mis Órdenes</span>
-                  </button>
-                </Link>
-
-                <Link to="/help">
-                  <button className="flex items-center space-x-2 border border-slate-200 text-white border-white hover:bg-[#CAF0F8] hover:border-[#CAF0F8] hover:text-[#03045E] transition-all duration-200 px-3 py-2 rounded-md text-sm font-medium">
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span>Ayuda</span>
-                  </button>
-                </Link>
-
+                    <Link to="/my-orders">
+                      <button className="flex items-center space-x-2 border border-slate-200 text-white border-white hover:bg-[#CAF0F8] hover:border-[#CAF0F8] hover:text-[#03045E] transition-all duration-200 px-3 py-2 rounded-md text-sm font-medium">
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                        <span>Mis Órdenes</span>
+                      </button>
+                    </Link>
+                  </>
+                )}
+                {/* Botón de ayuda solo para usuarios no admin, fuera del menú de usuario */}
                 {user?.role === "ADMIN" && (
                   <>
                     <Link to="/admin/products">
@@ -130,7 +127,7 @@ const Navbar = () => {
                     </Link>
                   </>
                 )}
-
+                {/* Menú de usuario */}
                 <div className="relative group">
                   <button className="flex items-center space-x-2 border border-slate-200 text-white border-white hover:bg-[#CAF0F8] hover:border-[#CAF0F8] hover:text-[#03045E] transition-all duration-200 px-3 py-2 rounded-md text-sm font-medium">
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -139,9 +136,17 @@ const Navbar = () => {
                     <span className="hidden xl:block">{user?.name} {user?.role === "ADMIN" && "(Admin)"} {user?.role === "SALES_MANAGER" && "(Manager)"}</span>
                     <span className="xl:hidden">{user?.name}</span>
                   </button>
-                 
                   <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                     <div className="py-1">
+                      {/* Botón de ayuda dentro del menú de usuario, arriba de cerrar sesión */}
+                      <Link to="/help">
+                        <button className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-blue-700 hover:bg-blue-50 transition-colors duration-200">
+                          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span>Ayuda</span>
+                        </button>
+                      </Link>
                       <button
                         onClick={logout}
                         className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors duration-200"
@@ -160,7 +165,8 @@ const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <div className="lg:hidden flex items-center space-x-2">
-            <CurrencySelector />
+            {/* Mostrar CurrencySelector solo si no es admin */}
+            {isAuthenticated && user?.role !== "ADMIN" && <CurrencySelector />}
             {isAuthenticated && (
               <Link to="/cart" onClick={closeMenu} className="relative">
                 <button className="flex items-center space-x-1 border border-slate-200 text-white border-white hover:bg-[#CAF0F8] hover:border-[#CAF0F8] hover:text-[#03045E] transition-all duration-200 p-2 rounded-md">
@@ -247,51 +253,35 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  {/* Moneda selector en móvil */}
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-3 border border-blue-100">
-                    <h3 className="text-xs font-semibold text-blue-700 mb-2 flex items-center">
-                      <svg className="h-3 w-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                      </svg>
-                      Moneda
-                    </h3>
-                    <CurrencySelector />
-                  </div>
-
-                  <div className="space-y-1">
-                    <Link 
-                      to="/my-orders" 
-                      onClick={closeMenu}
-                      className="flex items-center space-x-3 px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 rounded-lg transition-all duration-300 group"
-                    >
-                      <div className="flex items-center justify-center w-8 h-8 bg-green-100 rounded-lg group-hover:bg-green-200 transition-colors duration-300">
-                        <svg className="h-4 w-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  {/* Mostrar CurrencySelector solo si no es admin */}
+                  {user?.role !== "ADMIN" && (
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-3 border border-blue-100">
+                      <h3 className="text-xs font-semibold text-blue-700 mb-2 flex items-center">
+                        <svg className="h-3 w-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                         </svg>
-                      </div>
-                      <span>Mis Órdenes</span>
-                      <svg className="h-3 w-3 text-slate-400 ml-auto group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </Link>
-
-                    <Link 
-                      to="/help" 
-                      onClick={closeMenu}
-                      className="flex items-center space-x-3 px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 rounded-lg transition-all duration-300 group"
-                    >
-                      <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors duration-300">
-                        <svg className="h-4 w-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        Moneda
+                      </h3>
+                      <CurrencySelector />
+                    </div>
+                  )}
+                  {/* Mostrar Mis Órdenes solo si no es admin */}
+                  {user?.role !== "ADMIN" && (
+                    <div className="space-y-1">
+                      <Link to="/my-orders" onClick={closeMenu} className="flex items-center space-x-3 px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 rounded-lg transition-all duration-300 group">
+                        <div className="flex items-center justify-center w-8 h-8 bg-green-100 rounded-lg group-hover:bg-green-200 transition-colors duration-300">
+                          <svg className="h-4 w-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                          </svg>
+                        </div>
+                        <span>Mis Órdenes</span>
+                        <svg className="h-3 w-3 text-slate-400 ml-auto group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
-                      </div>
-                      <span>Centro de Ayuda</span>
-                      <svg className="h-3 w-3 text-slate-400 ml-auto group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </Link>
-                  </div>
-
+                      </Link>
+                    </div>
+                  )}
+                  {/* Panel de administración solo para admin */}
                   {user?.role === "ADMIN" && (
                     <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-3 border border-purple-100">
                       <h3 className="text-xs font-semibold text-purple-700 mb-2 flex items-center">
@@ -325,7 +315,7 @@ const Navbar = () => {
                       </div>
                     </div>
                   )}
-
+                  {/* Menú de usuario móvil: ayuda y cerrar sesión */}
                   <div className="bg-gradient-to-r from-slate-50 to-gray-50 rounded-lg p-3 border border-slate-200">
                     <div className="flex items-center space-x-2 mb-2">
                       <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full">
@@ -342,6 +332,12 @@ const Navbar = () => {
                         </div>
                       </div>
                     </div>
+                    <Link to="/help" onClick={closeMenu} className="flex items-center space-x-2 w-full px-3 py-2 text-xs font-medium text-blue-700 hover:bg-blue-50 rounded-md transition-colors duration-300 group">
+                      <svg className="h-3 w-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>Ayuda</span>
+                    </Link>
                     <button
                       onClick={() => {
                         logout();
