@@ -12,6 +12,7 @@ import MyOrders from "./pages/MyOrders";
 import OrderManagement from "./pages/OrderManagement";
 import ProductManagement from "./pages/ProductManagement";
 import Help from "./pages/Help";
+import ScheduleTrip from "./pages/ScheduleTrip";
 import { useAuth } from "./context/AuthContext";
 
 const PrivateRoute = ({ children }) => {
@@ -122,6 +123,7 @@ const AppContent = () => {
               <ProductManagement />
             </AdminRoute>
           } />
+          <Route path="/schedule-trip/:id" element={<ScheduleTrip />} />
         </Routes>
       </main>
     </div>
