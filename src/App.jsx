@@ -14,6 +14,7 @@ import ProductManagement from "./pages/ProductManagement";
 import Help from "./pages/Help";
 import ScheduleTrip from "./pages/ScheduleTrip";
 import { useAuth } from "./context/AuthContext";
+import { useEffect } from "react";
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated, loading, isInitialized } = useAuth();
@@ -80,6 +81,10 @@ const ManagerRoute = ({ children }) => {
 const AppContent = () => {
   const { isAuthenticated, loading, isInitialized } = useAuth();
   const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   // Mostrar loading solo mientras se inicializa la autenticación
   if (!isInitialized || loading) {
