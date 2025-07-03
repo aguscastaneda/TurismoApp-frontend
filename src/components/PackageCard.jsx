@@ -10,7 +10,7 @@ const PackageCard = ({ package: pkg }) => {
   const [people, setPeople] = useState(1);
   const [showSuccess, setShowSuccess] = useState(false);
   const { addToCart } = useCart();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const { convertPrice, formatPrice } = useCurrency();
   const { weather, loading: weatherLoading, getWeatherIcon } = useWeather(pkg.destination || 'Buenos Aires');
   const navigate = useNavigate();
@@ -194,13 +194,16 @@ const PackageCard = ({ package: pkg }) => {
           <div className="text-2xl sm:text-3xl font-bold text-gradient mb-3 sm:mb-4">
             {formattedPrice}
           </div>
-          <button
-            onClick={handleAddToCart}
-            disabled={pkg.stock === 0}
-            className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base py-2 sm:py-3"
-          >
-            {pkg.stock === 0 ? 'Agotado' : 'Agregar al Carrito'}
-          </button>
+          {/* Mostrar botón solo si NO es admin */}
+          {(!isAuthenticated || (isAuthenticated && user?.role !== 'ADMIN')) && (
+            <button
+              onClick={handleAddToCart}
+              disabled={pkg.stock === 0}
+              className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base py-2 sm:py-3"
+            >
+              {pkg.stock === 0 ? 'Agotado' : 'Agregar al Carrito'}
+            </button>
+          )}
           
           {/* Mensaje de confirmación */}
           {showSuccess && (
