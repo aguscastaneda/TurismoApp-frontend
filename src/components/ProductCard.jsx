@@ -35,6 +35,10 @@ const ProductCard = ({ product }) => {
   const handleCardClick = (e) => {
     // Evitar que el click en el botón "Agregar al carrito" dispare la navegación
     if (e.target.closest('button')) return;
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
     navigate(`/schedule-trip/${product.id}`, { state: { product } });
   };
 
