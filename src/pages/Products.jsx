@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import PackageCard from '../components/PackageCard';
+import ProductCard from '../components/ProductCard';
 import { useAuth } from '../context/AuthContext';
 import { useCurrency } from "../context/CurrencyContext";
 import { handleImageError } from "../utils/imageUtils";
@@ -407,7 +408,7 @@ const Products = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {tab.packages.map((pkg, index) => (
                 <div key={pkg.id} className="animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
-                  <PackageCard package={pkg} />
+                  <ProductCard product={{...pkg, origin: 'Buenos Aires'}} />
                 </div>
               ))}
             </div>
