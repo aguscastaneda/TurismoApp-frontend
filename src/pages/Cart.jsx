@@ -28,6 +28,7 @@ const Cart = () => {
       setLoading(true);
       setError(null);
 
+      const customTrips = JSON.parse(localStorage.getItem('customTrips') || '{}');
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/orders`, {
         method: 'POST',
         headers: {
@@ -37,7 +38,8 @@ const Cart = () => {
         body: JSON.stringify({
           items: cart.map(item => ({
             productId: item.productId,
-            quantity: item.quantity
+            quantity: item.quantity,
+            ...customTrips[item.productId]
           }))
         })
       });
@@ -132,42 +134,56 @@ const Cart = () => {
                 <div className="p-4 sm:p-6">
                   <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6">Productos en el carrito</h2>
                   <div className="space-y-4 sm:space-y-6">
-                    {cart.map((item) => (
-                      <div key={item.id} className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 p-3 sm:p-4 bg-gray-50 rounded-xl border border-gray-100">
-                        <div className="flex-1">
-                          <h3 className="text-base sm:text-lg font-medium text-gray-800">{item.product.name}</h3>
-                          <p className="text-gray-600 text-xs sm:text-sm">{item.product.description}</p>
-                        </div>
-                        <div className="flex items-center justify-between sm:justify-end space-x-3 sm:space-x-4">
-                          <div className="flex items-center space-x-2">
+                    {cart.map((item) => {
+                      let customTrips = {};
+                      try { customTrips = JSON.parse(localStorage.getItem('customTrips') || '{}'); } catch {}
+                      const config = customTrips[item.productId];
+                      return (
+                        <div key={item.id} className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 p-3 sm:p-4 bg-gray-50 rounded-xl border border-gray-100">
+                          <div className="flex-1">
+                            <h3 className="text-base sm:text-lg font-medium text-gray-800">{item.product.name}</h3>
+                            <p className="text-gray-600 text-xs sm:text-sm">{item.product.description}</p>
+                            {config && (
+                              <div className="mt-2 text-xs sm:text-sm text-gray-700">
+                                <div><span className="font-semibold">Fecha de ida:</span> {config.fechaIda} <span className="ml-2 font-semibold">Horario:</span> {config.horaIda}</div>
+                                <div><span className="font-semibold">Fecha de regreso:</span> {config.fechaVuelta} <span className="ml-2 font-semibold">Horario:</span> {config.horaVuelta}</div>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex items-center justify-between sm:justify-end space-x-3 sm:space-x-4">
+                            <div className="flex flex-col items-center">
+                              <span className="text-xs text-gray-700 font-semibold mb-1">Personas</span>
+                              <div className="flex items-center space-x-2">
+                                <button
+                                  onClick={() => handleQuantityChange(item.productId, item.quantity - 1)}
+                                  className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200 text-sm sm:text-base"
+                                >
+                                  -
+                                </button>
+                                <span className="w-6 sm:w-8 text-center font-medium text-sm sm:text-base">{item.quantity}</span>
+                                <button
+                                  onClick={() => handleQuantityChange(item.productId, item.quantity + 1)}
+                                  className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200 text-sm sm:text-base"
+                                >
+                                  +
+                                </button>
+                              </div>
+                            </div>
+                            <p className="text-base sm:text-lg font-semibold text-gray-900 min-w-[80px] sm:min-w-[120px] text-right">
+                              {formatPrice(convertPrice(item.product.price, 'USD') * item.quantity)}
+                            </p>
                             <button
-                              onClick={() => handleQuantityChange(item.productId, item.quantity - 1)}
-                              className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200 text-sm sm:text-base"
+                              onClick={() => removeFromCart(item.productId)}
+                              className="text-red-600 hover:text-red-700 transition-colors duration-200 p-1"
                             >
-                              -
-                            </button>
-                            <span className="w-6 sm:w-8 text-center font-medium text-sm sm:text-base">{item.quantity}</span>
-                            <button
-                              onClick={() => handleQuantityChange(item.productId, item.quantity + 1)}
-                              className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200 text-sm sm:text-base"
-                            >
-                              +
+                              <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
                             </button>
                           </div>
-                          <p className="text-base sm:text-lg font-semibold text-gray-900 min-w-[80px] sm:min-w-[120px] text-right">
-                            {formatPrice(convertPrice(item.product.price, 'USD') * item.quantity)}
-                          </p>
-                          <button
-                            onClick={() => removeFromCart(item.productId)}
-                            className="text-red-600 hover:text-red-700 transition-colors duration-200 p-1"
-                          >
-                            <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                          </button>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>
