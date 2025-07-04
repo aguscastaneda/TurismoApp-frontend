@@ -191,14 +191,24 @@ const ScheduleTrip = () => {
         </div>
       </div>
       {/* Configuración de viaje */}
-      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="mt-6 flex flex-col gap-4">
         <div>
           <label className="block text-sm font-medium mb-1">Fecha de ida</label>
           <input
             type="date"
             min={todayStr()}
             value={fechaIda}
-            onChange={e => setFechaIda(e.target.value)}
+            onChange={e => {
+              const selectedDate = e.target.value;
+              const today = todayStr();
+              if (selectedDate >= today) {
+                setFechaIda(selectedDate);
+                // Si la fecha de vuelta es anterior a la nueva fecha de ida, la limpiamos
+                if (fechaVuelta && selectedDate > fechaVuelta) {
+                  setFechaVuelta('');
+                }
+              }
+            }}
             className="w-full border rounded px-2 py-1"
           />
         </div>
@@ -208,7 +218,13 @@ const ScheduleTrip = () => {
             type="date"
             min={fechaIda || todayStr()}
             value={fechaVuelta}
-            onChange={e => setFechaVuelta(e.target.value)}
+            onChange={e => {
+              const selectedDate = e.target.value;
+              const minDate = fechaIda || todayStr();
+              if (selectedDate >= minDate) {
+                setFechaVuelta(selectedDate);
+              }
+            }}
             className="w-full border rounded px-2 py-1"
           />
         </div>
@@ -234,17 +250,24 @@ const ScheduleTrip = () => {
             {horarios.map(h => <option key={h} value={h}>{h}</option>)}
           </select>
         </div>
-        <div className="col-span-2">
-          <label className="block text-sm font-medium mb-1">Número de personas</label>
-          <div className="flex items-center gap-2">
-            <input
-              type="number"
-              min="1"
-              max={maxPeople}
-              value={people}
-              onChange={e => setPeople(Math.max(1, Math.min(maxPeople, Number(e.target.value) || 1)))}
-              className="w-full border rounded px-2 py-1"
-            />
+        <div>
+          <label className="block text-sm font-medium mb-1 text-center">Número de personas</label>
+          <div className="flex items-center justify-center gap-4">
+            <button
+              onClick={() => setPeople(prev => Math.max(1, prev - 1))}
+              disabled={people <= 1}
+              className="w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 flex items-center justify-center text-lg font-semibold transition-colors"
+            >
+              -
+            </button>
+            <span className="text-3xl font-bold min-w-[4rem] text-center">{people}</span>
+            <button
+              onClick={() => setPeople(prev => Math.min(maxPeople, prev + 1))}
+              disabled={people >= maxPeople}
+              className="w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 flex items-center justify-center text-lg font-semibold transition-colors"
+            >
+              +
+            </button>
           </div>
         </div>
       </div>
