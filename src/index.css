@@ -248,7 +248,7 @@
   }
   
   .input-field {
-    @apply px-3 py-2 text-sm;
+    @apply py-2 text-sm;
   }
   
   .card {
