@@ -158,7 +158,7 @@ const Register = () => {
               </label>
               <div className="relative">
                 <svg
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-primary-500"
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-3 h-3 sm:w-5 sm:h-5 text-primary-500"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -171,7 +171,7 @@ const Register = () => {
                   type="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="input-field pl-10 sm:pl-11 text-sm sm:text-base"
+                  className="input-field pl-12 sm:pl-14 text-sm sm:text-base"
                   placeholder="tucorreo@ejemplo.com"
                   required
                 />
@@ -185,7 +185,7 @@ const Register = () => {
               </label>
               <div className="relative">
                 <svg
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-primary-500"
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-3 h-3 sm:w-5 sm:h-5 text-primary-500"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -201,7 +201,7 @@ const Register = () => {
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
                   onChange={handleChange}
-                  className="input-field pl-10 sm:pl-11 pr-20 sm:pr-24 text-sm sm:text-base"
+                  className="input-field pl-12 sm:pl-14 pr-20 sm:pr-24 text-sm sm:text-base"
                   placeholder="••••••••"
                   required
                 />
@@ -222,7 +222,7 @@ const Register = () => {
               </label>
               <div className="relative">
                 <svg
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-primary-500"
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-3 h-3 sm:w-5 sm:h-5 text-primary-500"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -238,7 +238,7 @@ const Register = () => {
                   type={showConfirmPassword ? "text" : "password"}
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="input-field pl-10 sm:pl-11 pr-20 sm:pr-24 text-sm sm:text-base"
+                  className="input-field pl-12 sm:pl-14 pr-20 sm:pr-24 text-sm sm:text-base"
                   placeholder="••••••••"
                   required
                 />
