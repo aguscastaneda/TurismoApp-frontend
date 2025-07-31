@@ -101,7 +101,7 @@ const Products = () => {
 
   // Títulos en diferentes idiomas
   const titles = [
-    "Senti. Viaja. Soñá.", // Español
+    "Sentí. Viajá. Soñá.", // Español
     "Feel. Travel. Dream.", // Inglés
     "Sente. Viaje. Sonhe.", // Portugués
     "Siente. Viaja. Sueña.", // Español alternativo
